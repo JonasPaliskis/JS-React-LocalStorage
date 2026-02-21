@@ -110,8 +110,9 @@ function App() {
     }
   };
 
+  //issiuncia nauja saraso vieneta
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // stabdo perkrovima puslapio
 
     const form = event.target;
 
@@ -126,7 +127,7 @@ function App() {
     const updatedItems = [...itemsList, newItem];
     handleSetList(updatedItems);
 
-    setListItem({
+    setListItem({ // padaro tuscia forma
       id:        0,
       title:     "",
       when:      "",
@@ -136,7 +137,7 @@ function App() {
   };
 
   const handleSubmitEdit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // stabdo perkrovima puslapio
 
     const form = event.target;
 
@@ -152,7 +153,7 @@ function App() {
 
     handleSetList(updatedItems);
 
-    setListItem({
+    setListItem({  // padaro tuscia forma
       id: 0,
       title: "",
       when: "",
@@ -163,12 +164,13 @@ function App() {
     // pakaicia kad edit mugtukai dingtu
     const element = document.getElementById("editBtns");
     editBtns.style.display = "none";
+
   };
 
   const handleCancelEdit = (event) => {
-    event.preventDefault();
-
-    setListItem({
+    event.preventDefault(); // stabdo perkrovima puslapio
+ 
+    setListItem({ // padaro tuscia forma
       id: 0,
       title: "",
       when: "",
@@ -181,6 +183,7 @@ function App() {
     editBtns.style.display = "none";
   };
 
+  // istrina visa sarasa
   const handleRemoveStorage = () => {
     localStorage.removeItem(storageKey);
     setItemsList([]);
@@ -192,7 +195,7 @@ function App() {
         <button className="btn btn-removeItemBtn" onClick={handleRemoveStorage}>Clear List</button>
         <br />
         
-        <DisplayListItem 
+        <DisplayListItem // perduoda sarasa ir mygtuku funkcijas
           items            = {itemsList} 
           changeImportance = {handleCheckImportance}
           changeStatus     = {handleCheckStatus}
@@ -214,6 +217,7 @@ function App() {
               margin: "20px",
               gap: "10px"
             }} 
+            
             onSubmit={handleSubmit}>
                 <input
                   type="text"
@@ -238,6 +242,7 @@ function App() {
 
                 <button type="submit" className="btn btn-submitBtn">Submit</button>
 
+                {/* "Edit" ir "Cancel edit" mygtukai  nematomi kol nepaspaudi ant saraso "edit" mygtuko*/}
                 <div id="editBtns" style={{display: "none"}}>
                   <button 
                     type="button"

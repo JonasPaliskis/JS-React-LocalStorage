@@ -18,46 +18,56 @@ const DisplayListItem = ({
     const upcomingItems = items.filter(item => item.when === "Upcoming");
 
     // atspausdina sarasu
-    const printItems = (list) =>
-        list.map(item => (
+    const printItems = (list, timeTitle) =>
+        <div style={{
+                backgroundColor: "rgb(170, 177, 175)", 
+                padding: "10px", 
+                borderRadius: "10px",
+                margin: "10px" 
+                }}>
+                <h3>{timeTitle}</h3>
 
-        <div
-            key={item.id}
-            style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "5px 0",
-                borderBottom: "1px solid #ccc",
-            }}
-            
-            >
-            <input type="checkbox" checked={item.important} onChange={() => changeImportance(item.id)} />
-            <input type="checkbox" checked={item.status} onChange={() => changeStatus(item.id)}/>
+                {list.map(item => (
 
-            <span
-                style={{
-                flexGrow: 1,
-                color: item.important ? "red" : "black",
-                textDecoration: item.status ? "line-through" : "none",
-                }}
-            >
-                {item.title}
-            </span>
+                <div
+                    key={item.id}
 
-            <button onClick={() => editItem(item.id)} 
-                    style={{ padding: "2px 6px" }}
-                    className="btn btn-editItemBtn"
-            >
-                Edit
-            </button>
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "5px 0",
+                        borderBottom: "1px solid #ccc",
+                    }}
+                    
+                    >
+                    <input type="checkbox" checked={item.important} onChange={() => changeImportance(item.id)} />
+                    <input type="checkbox" checked={item.status} onChange={() => changeStatus(item.id)}/>
 
-            <button
-                onClick={() => removeItem(item.id)}
-                className="btn btn-removeItemBtn"
-            > X </button>
-            </div>
-        ));
+                    <span
+                        style={{
+                        flexGrow: 1,
+                        color: item.important ? "red" : "black", // jei svarbus tai pazymimas radonai
+                        textDecoration: item.status ? "line-through" : "none", // jei atliktas tai tampa isbrauktas
+                        }}
+                    >
+                        {item.title}
+                    </span>
+
+                    <button onClick={() => editItem(item.id)} 
+                            style={{ padding: "2px 6px" }}
+                            className="btn btn-editItemBtn"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        onClick={() => removeItem(item.id)}
+                        className="btn btn-removeItemBtn"
+                    > X </button>
+                    </div>
+                ))}
+        </div>
 
   return (
 
@@ -69,48 +79,22 @@ const DisplayListItem = ({
         }}>
         <h2>Task</h2>
 
-        {todayItems.length > 0 && (
+        {todayItems.length > 0 && ( // jei tuscias sarasa tai nespausdina
         <>
-            <div style={{
-                backgroundColor: "rgb(170, 177, 175)", 
-                padding: "10px", 
-                borderRadius: "10px",
-                margin: "10px" 
-                }}>
-
-                <h3>Today</h3>
-                {printItems(todayItems)}
-            </div>
-        </>
-        )}
-
-        {tomorrowItems.length > 0 && (
-        <>
-            <div style={{
-                backgroundColor: "rgb(170, 177, 175)", 
-                padding: "10px", 
-                borderRadius: "10px",
-                margin: "10px" 
-                }}>
-                    <h3>Tomorrow</h3>
-                    {printItems(tomorrowItems)}
-                </div>
+            {printItems(todayItems, "Today")}
 
         </>
         )}
 
-        {upcomingItems.length > 0 && (
+        {tomorrowItems.length > 0 && ( // jei tuscias sarasa tai nespausdina
         <>
-            <div style={{
-                backgroundColor: "rgb(170, 177, 175)", 
-                padding: "10px", 
-                borderRadius: "10px",
-                margin: "10px" 
-                }}>
-                    <h3>Upcoming</h3>
-                    {printItems(upcomingItems)}            
-                </div>
+            {printItems(tomorrowItems, "Tomorrow")}
+        </>
+        )}
 
+        {upcomingItems.length > 0 && ( // jei tuscias sarasa tai nespausdina
+        <>
+            {printItems(upcomingItems, "Upcoming")}
         </>
         )}
     </div>
