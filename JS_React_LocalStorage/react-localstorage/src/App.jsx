@@ -4,8 +4,9 @@ import "./App.css";
 
 function App() {
 
-  const storageKey = "itemList"; // localStorage raktas
+  const storageKey = "itemList"; // localStorage pavadinimas / raktas
 
+  // list item - vienas taskas (kai modefikuojama arba submit)  
   const [listItem, setListItem] = useState({
     id:0,
     title: "",
@@ -13,20 +14,24 @@ function App() {
     status: false,
     important: false
   });
+  
+  // itemsList - visas sarasas 
+  const [itemsList, setItemsList] = useState([]);
 
+  // atnaujina sarasa
   const handleSetList = (updatedItems) => {
     localStorage.setItem(storageKey, JSON.stringify(updatedItems));
     setItemsList(updatedItems);
     console.log(updatedItems);
   }
 
-  const [itemsList, setItemsList] = useState([]);
-
+  // paima sarasa is LocalStorage pradzioje, jei nerai tai paima []
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem(storageKey)) || [];
     setItemsList(storedItems);
   }, []);
 
+  
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
 
@@ -36,45 +41,56 @@ function App() {
     }));
   };
 
+  // pakeicia statusa, ar atliktas ar ne
   const handleCheckStatus = (itemId) => {
 
-    const updatedItems = [...itemsList];
+    const updatedItems = [...itemsList]; // daro kopija
 
     for (let i = 0; i < updatedItems.length; i++) {
 
-      if (updatedItems[i].id === itemId) {
+      if (updatedItems[i].id === itemId) {// suranda su tapacia id
 
-        updatedItems[i].status = !updatedItems[i].status;
-        break;
+        updatedItems[i].status = !updatedItems[i].status;// pakeicia i "true" arba "false"
+        break;// baigia for loop
       }
     }
-    handleSetList(updatedItems);
+
+    handleSetList(updatedItems);   // atnaujina sarasa
+
   };
 
+  // pakeicia svarbuma, ar svarbus ar ne
   const handleCheckImportance = (itemId) => {
-    const updatedItems = [...itemsList]; // copy the list
+
+    const updatedItems = [...itemsList]; 
+
     for (let i = 0; i < updatedItems.length; i++) {
-      if (updatedItems[i].id === itemId) {
-        updatedItems[i].important = !updatedItems[i].important;
-        break;
+
+      if (updatedItems[i].id === itemId) {// suranda su tapacia id
+
+        updatedItems[i].important = !updatedItems[i].important; // pakeicia i "true" arba "false"
+        break;// baigia for loop
       }
     }
-    handleSetList(updatedItems);
+    handleSetList(updatedItems); // atnaujina sarasa
   };
 
+  // istrina 1 is saraso
   const handleRemoveItem = (itemId) => {
 
     const updatedItems = [...itemsList];
 
     for (let i = 0; i < updatedItems.length; i++) {
 
-      if (updatedItems[i].id === itemId) {
-        updatedItems.splice(i, 1);
-        break;
+      if (updatedItems[i].id === itemId) {// suranda su tapacia id
+        updatedItems.splice(i, 1); // iskerpa
+        break; // baigia for loop
       }
     }
-    handleSetList(updatedItems);
+    handleSetList(updatedItems);// atnaujina sarasa
   };
+
+  // modefikavimas vieno, idedant i forma
   const handleEditItem = (itemId) => {
 
     const updatedItems = [...itemsList];
@@ -82,7 +98,14 @@ function App() {
     for (let i = 0; i < updatedItems.length; i++) {
 
       if (updatedItems[i].id === itemId) {
+
         setListItem(updatedItems[i]);
+
+
+        // pakaicia kad edit mugtukai butu
+        const element = document.getElementById("editBtns");
+        editBtns.style.display = "";
+
       }
     }
   };
@@ -136,6 +159,26 @@ function App() {
       status: false,
       important: false,
     });
+
+    // pakaicia kad edit mugtukai dingtu
+    const element = document.getElementById("editBtns");
+    editBtns.style.display = "none";
+  };
+
+  const handleCancelEdit = (event) => {
+    event.preventDefault();
+
+    setListItem({
+      id: 0,
+      title: "",
+      when: "",
+      status: false,
+      important: false,
+    });
+
+    // pakaicia kad edit mugtukai dingtu
+    const element = document.getElementById("editBtns");
+    editBtns.style.display = "none";
   };
 
   const handleRemoveStorage = () => {
@@ -146,7 +189,9 @@ function App() {
   return (
     <>
       <div className="body">
-        <button onClick={handleRemoveStorage}>Clear List</button>
+        <button className="btn btn-removeItemBtn" onClick={handleRemoveStorage}>Clear List</button>
+        <br />
+        
         <DisplayListItem 
           items            = {itemsList} 
           changeImportance = {handleCheckImportance}
@@ -191,8 +236,23 @@ function App() {
                   <option value="Upcoming">UPCOMING</option>
                 </select>
 
-                <button type="submit">Submit</button>
-                <button type="button" onClick={handleSubmitEdit}>Edit</button>
+                <button type="submit" className="btn btn-submitBtn">Submit</button>
+
+                <div id="editBtns" style={{display: "none"}}>
+                  <button 
+                    type="button"
+                    className="btn btn-editBtn"
+                    onClick={handleSubmitEdit}
+                  >Edit</button>
+
+                  <button 
+                    type="button"
+                    className="btn btn-removeItemBtn"
+                    onClick={handleCancelEdit}
+                  >Cancel edit</button>
+
+                </div>
+                
               </form>
         </div>
       </div>

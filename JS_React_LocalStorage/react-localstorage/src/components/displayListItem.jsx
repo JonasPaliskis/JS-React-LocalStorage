@@ -17,7 +17,7 @@ const DisplayListItem = ({
     const tomorrowItems = items.filter(item => item.when === "Tomorrow");
     const upcomingItems = items.filter(item => item.when === "Upcoming");
 
-    
+    // atspausdina sarasu
     const printItems = (list) =>
         list.map(item => (
 
@@ -45,22 +45,17 @@ const DisplayListItem = ({
                 {item.title}
             </span>
 
-            <button onClick={() => editItem(item.id)} style={{ padding: "2px 6px" }}>
+            <button onClick={() => editItem(item.id)} 
+                    style={{ padding: "2px 6px" }}
+                    className="btn btn-editItemBtn"
+            >
                 Edit
             </button>
 
             <button
                 onClick={() => removeItem(item.id)}
-                style={{
-                padding: "2px 6px",
-                backgroundColor: "#ff4d4d",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                }}
-            >
-                X
-            </button>
+                className="btn btn-removeItemBtn"
+            > X </button>
             </div>
         ));
 
@@ -72,6 +67,7 @@ const DisplayListItem = ({
         borderRadius: "10px",
         margin: "20px"
         }}>
+        <h2>Task</h2>
 
         {todayItems.length > 0 && (
         <>
