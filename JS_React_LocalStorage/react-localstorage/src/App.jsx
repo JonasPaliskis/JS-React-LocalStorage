@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import DisplayListItem from "./components/DisplayListItem";
+import DisplayByDayListItems from "./components/displayByDayListItems";
+import DisplayByTimeListItems from "./components/displayByTimeListItems";
 import "./App.css";
 
 function App() {
@@ -189,19 +190,88 @@ function App() {
     setItemsList([]);
   };
 
+
+  // nustato pagal kuri metoda rusioja sarasa 
+  const [sortChange, setSortChange] = useState(true);
+  const handleChangeSort = () => {
+    setSortChange(!sortChange);
+  };
+
+  // atspausdina sarasu
+  const printItems = (list, timeTitle) =>
+        <div style={{
+                backgroundColor: "rgb(170, 177, 175)", 
+                padding: "10px", 
+                borderRadius: "10px",
+                margin: "10px" 
+                }}>
+                <h3>{timeTitle}</h3>
+
+                {list.map(item => (
+
+                <div
+                    key={item.id}
+
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "5px 0",
+                        borderBottom: "1px solid #ccc",
+                    }}
+                    
+                    >
+                    <input type="checkbox" checked={item.important} onChange={() => handleCheckImportance(item.id)} />
+                    <input type="checkbox" checked={item.status}    onChange={() => handleCheckStatus(item.id)}/>
+
+                    <span
+                        style={{
+                        flexGrow: 1,
+                        color: item.important ? "red" : "black", // jei svarbus tai pazymimas radonai
+                        textDecoration: item.status ? "line-through" : "none", // jei atliktas tai tampa isbrauktas
+                        }}
+                    >
+                        {item.title}
+                    </span>
+
+                    <button onClick={() => handleEditItem(item.id)} 
+                            style={{ padding: "2px 6px" }}
+                            className="btn btn-editItemBtn"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="btn btn-removeItemBtn"
+                    > X </button>
+                    </div>
+                ))}
+        </div>
+
   return (
     <>
       <div className="body">
         <button className="btn btn-removeItemBtn" onClick={handleRemoveStorage}>Clear List</button>
+        <button className="btn btn-submitBtn" onClick={handleChangeSort}>Change sort</button>
         <br />
-        
-        <DisplayListItem // perduoda sarasa ir mygtuku funkcijas
-          items            = {itemsList} 
-          changeImportance = {handleCheckImportance}
-          changeStatus     = {handleCheckStatus}
-          editItem         = {handleEditItem}
-          removeItem       = {handleRemoveItem}
+        <div style={{display: sortChange ? "none" : ""}}>
+        <DisplayByDayListItems // perduoda sarasa, atspausdinima saraso ir mygtuku funkcijas
+          items      = {itemsList} 
+          printItems = {printItems}
+          // changeImportance = {handleCheckImportance}
+          // changeStatus     = {handleCheckStatus}
+          // editItem         = {handleEditItem}
+          // removeItem       = {handleRemoveItem}
         />
+        </div>
+
+        <div style={{display: sortChange ? "" : "none"}}>
+        <DisplayByTimeListItems // perduoda sarasa, atspausdinima saraso ir mygtuku funkcijas
+          items      = {itemsList} 
+          printItems = {printItems}
+        />
+        </div>
 
         <div style={{
           backgroundColor: "rgb(130, 137, 135)", 
@@ -217,7 +287,7 @@ function App() {
               margin: "20px",
               gap: "10px"
             }} 
-            
+
             onSubmit={handleSubmit}>
                 <input
                   type="text"
